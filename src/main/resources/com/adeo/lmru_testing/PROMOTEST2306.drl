@@ -1,0 +1,47 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "PROMOTEST2306"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9950"
+    when
+            (com.adeo.lys.model.v2.ActiveTypology(name=="promo_discount") or not com.adeo.lys.model.v2.ActiveTypology())
+            context : com.adeo.lys.model.v2.Context(dateTime >= LocalDateTime.parse("1970-12-30T21:00") , dateTime <= LocalDateTime.parse("2999-12-30T23:59:59"))
+            com.adeo.lys.model.v2.ActivationCode(value == "PROMOTEST2306")
+            com.adeo.lys.model.v2.BasketSubTotal(subtotalAmount > "1" , key == "totalTicket")
+            com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket" , sstot : subtotalAmount != null)
+            not (com.adeo.lys.model.v2.BasketReduction(key == "PROMOTEST2306") )
+            			tlbts : java.util.ArrayList( size>0) from accumulate (
+			    ll : com.adeo.lys.model.v2.TotalLineReductionByTypology(typology == "promo_discount"),
+			    collectList(ll))
+
+        then
+            com.adeo.lys.model.v2.BasketReduction fact0 = new com.adeo.lys.model.v2.BasketReduction();
+            fact0.setAmount(26);
+            fact0.setOfferTypeExceptions(java.util.Arrays.asList("2P","3P"));
+            fact0.setRestriction("DISPATCH");
+            fact0.setRewardId("105");
+            fact0.setKey("PROMOTEST2306");
+            fact0.setDescription("promotest2306");
+            fact0.setTypology("promo_discount");
+            fact0.setUnit("PERCENT");
+            fact0.setCalcModeCode("PERCENT");
+            fact0.setOfferCode("PROMOTEST2306");
+            fact0.setRewardType("DISCOUNT");
+            fact0.setAdvantageCode("PROMOTEST2306");
+            fact0.setAdvantageId("98");
+            fact0.setTemplateCode("promo_discount");
+            fact0.setExternalCode("19");
+            fact0.setBenefType("TRANSACTION");
+            fact0.setImpact("ON_TRANSACTION");
+            fact0.setShortLabel("promotest2306");
+            fact0.setLimited(false);
+            fact0.setTriggeredPromoCode("PROMOTEST2306");
+            insert( fact0 );
+    end

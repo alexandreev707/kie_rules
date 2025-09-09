@@ -1,0 +1,49 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "ATEST0003"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9950"
+    when
+            (com.adeo.lys.model.v2.ActiveTypology(name=="promo_discount") or not com.adeo.lys.model.v2.ActiveTypology())
+            context : com.adeo.lys.model.v2.Context(dateTime >= LocalDateTime.parse("1970-12-30T21:00") , dateTime <= LocalDateTime.parse("2999-12-30T23:59:59"))
+            not (com.adeo.lys.model.v2.AdvantageHistory(advantageId == 4601 , triggeredCount >= 1) )
+            com.adeo.lys.model.v2.Context(java.util.Arrays.asList("35") contains entityId)
+            com.adeo.lys.model.v2.BasketSubTotal(subtotalAmount >= "1000" , key == "totalTicket")
+            com.adeo.lys.model.v2.ActivationCode(value == "PRTEST0003")
+            com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket" , sstot : subtotalAmount != null)
+            not (com.adeo.lys.model.v2.BasketReduction(key == "ATEST0003") )
+            			tlbts : java.util.ArrayList( size>0) from accumulate (
+			    ll : com.adeo.lys.model.v2.TotalLineReductionByTypology(typology == "promo_discount"),
+			    collectList(ll))
+
+        then
+            com.adeo.lys.model.v2.BasketReduction fact0 = new com.adeo.lys.model.v2.BasketReduction();
+            fact0.setAmount(20);
+            fact0.setOfferTypeExceptions(java.util.Arrays.asList("2P","3P"));
+            fact0.setRestriction("DISPATCH");
+            fact0.setRewardId("5001");
+            fact0.setKey("ATEST0003");
+            fact0.setDescription("ATEST0003");
+            fact0.setTypology("promo_discount");
+            fact0.setUnit("PERCENT");
+            fact0.setCalcModeCode("PERCENT");
+            fact0.setOfferCode("TEST0003");
+            fact0.setRewardType("DISCOUNT");
+            fact0.setAdvantageCode("ATEST0003");
+            fact0.setAdvantageId("4601");
+            fact0.setTemplateCode("promo_discount");
+            fact0.setExternalCode("18");
+            fact0.setBenefType("TRANSACTION");
+            fact0.setImpact("ON_TRANSACTION");
+            fact0.setShortLabel("ATEST0003");
+            fact0.setLimited(true);
+            fact0.setTriggeredPromoCode("PRTEST0003");
+            insert( fact0 );
+    end

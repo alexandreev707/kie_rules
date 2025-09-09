@@ -1,0 +1,42 @@
+/** this is a generic rules for all BU, not generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.math.RoundingMode;
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.math.RoundingMode;
+
+
+rule "APPLY_DISCOUNT_IN_LAM_FROM_ORDER_SUB_TOTAL"
+	dialect "mvel"
+	ruleflow-group "reductionligne"
+    salience "9001"
+	when
+		(com.adeo.lys.model.v2.ActiveTypology(name=="lam") or not com.adeo.lys.model.v2.ActiveTypology())
+		di : com.adeo.lys.model.v2.DiscountIn( ccode : code != null , unit == "PERCENT" , vv : value != null, typology=="lam", rewardId != null, fromOrderContext == true, subTotal == true)
+        ba : com.adeo.lys.model.v2.Basket( discounts contains di , lines : lines)
+        not (com.adeo.lys.model.v2.LineReduction(key==di.getCode(), locked == false))
+        not (com.adeo.lys.model.v2.RemovedReduction(key==di.getCode()))
+	then
+        com.adeo.lys.model.v2.BasketReduction fact0 = new com.adeo.lys.model.v2.BasketReduction();
+        fact0.setExternalCode(di.getExternalCode());
+        fact0.setAmount(vv);
+        fact0.setKey(di.getCode());
+        fact0.setDescription(di.getLabel());
+        fact0.setShortLabel(di.getLabel());
+        fact0.setTypology("lam");
+        fact0.setUnit(di.getUnit());
+        fact0.setCalcModeCode(di.getUnit());
+        fact0.setOfferCode("Burn Reward");
+        fact0.setRewardType("DISCOUNT");
+        fact0.setAdvantageCode("Burn Reward");
+        fact0.setTemplateCode("lam");
+        fact0.setExternalRewardToBurn(di.getRewardIdToBurn());
+        fact0.setRewardId(di.getRewardId());
+        fact0.setBenefType("TRANSACTION");
+        fact0.setImpact("ON_TRANSACTION");
+        fact0.setLocked(true);
+        fact0.setOrderNumber(di.getOrderNumber());
+        insert( fact0 );
+end

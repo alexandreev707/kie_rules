@@ -1,0 +1,48 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "purchase_over400_kgd"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "7100"
+    when
+            (com.adeo.lys.model.v2.ActiveTypology(name=="purchase_over_four_hundred") or not com.adeo.lys.model.v2.ActiveTypology())
+            context : com.adeo.lys.model.v2.Context(dateTime >= LocalDateTime.parse("1970-12-30T21:00") , dateTime <= LocalDateTime.parse("2999-12-30T23:59:59"))
+            com.adeo.lys.model.v2.Context(java.util.Arrays.asList("78") contains entityId)
+            com.adeo.lys.model.v2.BasketSubTotal(subtotalAmount >= "400000" , key == "totalTicket")
+            com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("VALID") contains status)
+            com.adeo.lys.model.v2.Rank(java.util.Arrays.asList("CLASSIC") contains value)
+            com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket" , sstot : subtotalAmount != null)
+            oo : com.adeo.lys.model.v2.Line(nn : number)
+            not (com.adeo.lys.model.v2.LineReduction(key == "purchase_over400_kgd" , number == nn) )
+            not (com.adeo.lys.model.v2.RemovedReduction(lineNumber == nn , lineReduction.key == "purchase_over400_kgd") )
+            ba : com.adeo.lys.model.v2.Basket()
+            com.adeo.lys.model.v2.TotalLineReduction(number == nn , totalDiscount : amount)
+        then
+            com.adeo.lys.model.v2.BasketReduction fact0 = new com.adeo.lys.model.v2.BasketReduction();
+            fact0.setAmount(3.5);
+            fact0.setOfferTypeExceptions(java.util.Arrays.asList("2P","3P"));
+            fact0.setRestriction("DISPATCH");
+            fact0.setKey("purchase_over400_kgd");
+            fact0.setDescription("purchase_over400_kgd");
+            fact0.setTypology("purchase_over_four_hundred");
+            fact0.setCalcModeCode("PERCENT");
+            fact0.setOfferCode("POINTS_FOR_PURCHASE_OVER400");
+            fact0.setRewardType("UNIT");
+            fact0.setAdvantageCode("purchase_over400_kgd");
+            fact0.setAdvantageId("4526");
+            fact0.setTemplateCode("purchase_over_four_hundred");
+            fact0.setExternalCode("3");
+            fact0.setBenefType("TRANSACTION");
+            fact0.setImpact("ON_TRANSACTION");
+            fact0.setEarnKind("TRN");
+            fact0.setShortLabel("purchase_over400_kgd");
+            fact0.setLimited(false);
+            fact0.setUnit("POINT");
+            insert( fact0 );
+    end

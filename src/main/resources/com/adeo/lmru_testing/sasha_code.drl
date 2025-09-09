@@ -1,0 +1,48 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "sasha_code"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9900"
+    when
+            (com.adeo.lys.model.v2.ActiveTypology(name=="punctual") or not com.adeo.lys.model.v2.ActiveTypology())
+            context : com.adeo.lys.model.v2.Context(dateTime >= LocalDateTime.parse("1970-12-30T21:00") , dateTime <= LocalDateTime.parse("2999-12-30T23:59:59"))
+            oo : com.adeo.lys.model.v2.Line(smlist1 : segmentMatches , nn : number)
+            com.adeo.lys.model.v2.SegmentMatch(smlist1 contains this , code == "4201" , type == "LIST")
+            com.adeo.lys.model.v2.ActivationCode(value == "aao_sasha_05")
+            com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket" , sstot : subtotalAmount != null)
+            not (com.adeo.lys.model.v2.BasketReduction(key == "sasha_code") )
+            			tlbts : java.util.ArrayList( size>0) from accumulate (
+			    ll : com.adeo.lys.model.v2.TotalLineReductionByTypology(typology == "punctual"),
+			    collectList(ll))
+
+        then
+            com.adeo.lys.model.v2.BasketReduction fact0 = new com.adeo.lys.model.v2.BasketReduction();
+            fact0.setAmount(500);
+            fact0.setOfferTypeExceptions(java.util.Arrays.asList("2P","3P"));
+            fact0.setRestriction("DISPATCH");
+            fact0.setRewardId("4802");
+            fact0.setKey("sasha_code");
+            fact0.setDescription("lolkekcheburek");
+            fact0.setTypology("punctual");
+            fact0.setUnit("FIXED");
+            fact0.setCalcModeCode("FIXED");
+            fact0.setOfferCode("AAO_SASHA");
+            fact0.setRewardType("DISCOUNT");
+            fact0.setAdvantageCode("sasha_code");
+            fact0.setAdvantageId("4351");
+            fact0.setTemplateCode("punctual");
+            fact0.setExternalCode("4");
+            fact0.setBenefType("TRANSACTION");
+            fact0.setImpact("ON_TRANSACTION");
+            fact0.setShortLabel("lolkekcheburek");
+            fact0.setLimited(false);
+            fact0.setTriggeredPromoCode("aao_sasha_05");
+            insert( fact0 );
+    end

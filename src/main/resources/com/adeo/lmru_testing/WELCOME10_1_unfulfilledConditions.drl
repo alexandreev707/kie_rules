@@ -1,0 +1,62 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "WELCOME10_1_unfulfilledConditions"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9700"
+    when
+            com.adeo.lys.model.v2.ActivationCode(value == "PROMONEW25")
+            not (com.adeo.lys.model.v2.LineReduction(triggeredPromoCode == "PROMONEW25") )
+            not (com.adeo.lys.model.v2.BasketReduction(triggeredPromoCode == "PROMONEW25") )
+            not (com.adeo.lys.model.v2.Discount(triggeredPromoCode == "PROMONEW25") )
+            $cc : com.adeo.lys.model.v2.CalculationRequest()
+            $segmentmatch1 : com.adeo.lys.model.v2.SegmentMatch()
+            
+            $basketsubtotal4 : com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket")
+            $loyalty2 : com.adeo.lys.model.v2.Loyalty()
+            $counter3 : com.adeo.lys.model.v2.Counter(code == "G")
+            $context0 : com.adeo.lys.model.v2.Context()
+        then
+            if ( !($context0.getDateTime() >=LocalDateTime.parse("1970-12-31T00:00") && $context0.getDateTime() <=LocalDateTime.parse("2999-12-31T23:59:59") && $context0.getChannel() =="MOB")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition0 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition0.setErrorCode(46);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition0);
+                return;
+             }
+            if ( !($segmentmatch1.getType() =="POS" && $segmentmatch1.getCode() =="250")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition1 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition1.setErrorCode(41);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition1);
+                return;
+             }
+            if ( !(java.util.Arrays.asList("VALID").contains($loyalty2.getStatus()))) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition2 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition2.setErrorCode(3);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition2);
+                return;
+             }
+            if ( !($counter3.getGlobalValue() =="0")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition3 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition3.setErrorCode(29);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition3);
+                return;
+             }
+            if ( !($basketsubtotal4.getSubtotalAmount() >"9000")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition4 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition4.setErrorCode(4);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition4);
+                return;
+             }
+            if ($cc.getUnfulfilledConditions().isEmpty()) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition5 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition5.setErrorCode(1);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition5);
+                return;
+             }
+    end

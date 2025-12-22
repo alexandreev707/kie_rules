@@ -1,0 +1,48 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "PR_QA_PROMO_10"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9900"
+    when
+            (com.adeo.lys.model.v2.ActiveTypology(name=="punctual") or not com.adeo.lys.model.v2.ActiveTypology())
+            context : com.adeo.lys.model.v2.Context(dateTime >= LocalDateTime.parse("2025-04-17T00:00") , dateTime <= LocalDateTime.parse("2025-04-30T23:59:59"))
+            com.adeo.lys.model.v2.BasketSubTotal(subtotalAmount <= "400" , key == "totalTicket")
+            com.adeo.lys.model.v2.ActivationCode(value == "PRQAPROMO10")
+            com.adeo.lys.model.v2.BasketSubTotal(subtotalAmount >= "200" , key == "totalTicket")
+            com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket" , sstot : subtotalAmount != null)
+            not (com.adeo.lys.model.v2.BasketReduction(key == "PR_QA_PROMO_10") )
+            			tlbts : java.util.ArrayList( size>0) from accumulate (
+			    ll : com.adeo.lys.model.v2.TotalLineReductionByTypology(typology == "punctual"),
+			    collectList(ll))
+
+        then
+            com.adeo.lys.model.v2.BasketReduction fact0 = new com.adeo.lys.model.v2.BasketReduction();
+            fact0.setAmount(10);
+            fact0.setOfferTypeExceptions(java.util.Arrays.asList("2P","3P"));
+            fact0.setRestriction("DISPATCH");
+            fact0.setRewardId("4401");
+            fact0.setKey("PR_QA_PROMO_10");
+            fact0.setDescription("PR_QA_PROMO_10");
+            fact0.setTypology("punctual");
+            fact0.setUnit("PERCENT");
+            fact0.setCalcModeCode("PERCENT");
+            fact0.setOfferCode("PR_QA_PROMO_10");
+            fact0.setRewardType("DISCOUNT");
+            fact0.setAdvantageCode("PR_QA_PROMO_10");
+            fact0.setAdvantageId("1200");
+            fact0.setTemplateCode("punctual");
+            fact0.setExternalCode("19");
+            fact0.setBenefType("TRANSACTION");
+            fact0.setImpact("ON_TRANSACTION");
+            fact0.setShortLabel("PR_QA_PROMO_10");
+            fact0.setLimited(false);
+            fact0.setTriggeredPromoCode("PRQAPROMO10");
+            insert( fact0 );
+    end

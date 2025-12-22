@@ -1,0 +1,41 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "LP_PRO_R4_R_0_ALL_ALL_A"
+    dialect "mvel"
+    ruleflow-group "customerevent"
+    salience "6001"
+    when
+            (com.adeo.lys.model.v2.ActiveTypology(name=="rank") or not com.adeo.lys.model.v2.ActiveTypology())
+            context : com.adeo.lys.model.v2.Context(dateTime >= LocalDateTime.parse("1970-12-31T00:00") , dateTime <= LocalDateTime.parse("2999-12-31T23:59:59"))
+            com.adeo.lys.model.v2.SegmentMatch(type == "POS" , code == "250")
+            not (com.adeo.lys.model.v2.Rank(value == "PLATINUM") )
+            com.adeo.lys.model.v2.QuaterlyGlobalCounter(value >= "400000")
+            com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("3") contains type)
+            com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("VALID") contains status)
+        then
+            com.adeo.lys.model.v2.Discount fact0 = new com.adeo.lys.model.v2.Discount();
+            fact0.setRewardType("RANK");
+            fact0.setAdvantageCode("LP_PRO_R4_R_0_ALL_ALL_A");
+            fact0.setValue("PLATINUM");
+            fact0.setTemplateCode("rank");
+            fact0.setOperation("EARN");
+            fact0.setEngineTemplateCode("rank");
+            fact0.setAttributes(new java.util.ArrayList()); 
+
+            fact0.setKey("LP_PRO_R4_R_0_ALL_ALL_A");
+            fact0.setDescription("Loyalty Program PRO Platinum Rank");
+            fact0.setTypology("rank");
+            fact0.setOfferCode("LP_PRO_RANKS");
+            fact0.setAdvantageId("758");
+            fact0.setExternalCode("20");
+            fact0.setImpact("POST_TRANSACTION");
+            fact0.setShortLabel("Loyalty Program PRO Platinum Rank");
+            fact0.setLimited(false);
+            insert( fact0 );
+    end

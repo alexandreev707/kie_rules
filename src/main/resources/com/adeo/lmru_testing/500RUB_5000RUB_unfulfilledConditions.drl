@@ -1,0 +1,41 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "500RUB_5000RUB_unfulfilledConditions"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9650"
+    when
+            com.adeo.lys.model.v2.ActivationCode(value == "500_5000")
+            not (com.adeo.lys.model.v2.LineReduction(triggeredPromoCode == "500_5000") )
+            not (com.adeo.lys.model.v2.BasketReduction(triggeredPromoCode == "500_5000") )
+            not (com.adeo.lys.model.v2.Discount(triggeredPromoCode == "500_5000") )
+            $cc : com.adeo.lys.model.v2.CalculationRequest()
+            $segmentmatch1 : com.adeo.lys.model.v2.SegmentMatch()
+            
+            $context0 : com.adeo.lys.model.v2.Context()
+        then
+            if ( !($context0.getDateTime() >=LocalDateTime.parse("1970-12-31T00:00") && $context0.getDateTime() <=LocalDateTime.parse("2999-12-31T23:59:59"))) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition0 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition0.setErrorCode(46);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition0);
+                return;
+             }
+            if ( !($segmentmatch1.getType() =="POS" && $segmentmatch1.getCode() =="250")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition1 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition1.setErrorCode(41);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition1);
+                return;
+             }
+            if ($cc.getUnfulfilledConditions().isEmpty()) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition2 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition2.setErrorCode(1);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition2);
+                return;
+             }
+    end

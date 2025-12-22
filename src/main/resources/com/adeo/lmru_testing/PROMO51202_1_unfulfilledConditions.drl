@@ -1,0 +1,70 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "PROMO51202_1_unfulfilledConditions"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9700"
+    when
+            com.adeo.lys.model.v2.ActivationCode(value == "PROMO51202")
+            not (com.adeo.lys.model.v2.LineReduction(triggeredPromoCode == "PROMO51202") )
+            not (com.adeo.lys.model.v2.BasketReduction(triggeredPromoCode == "PROMO51202") )
+            not (com.adeo.lys.model.v2.Discount(triggeredPromoCode == "PROMO51202") )
+            $cc : com.adeo.lys.model.v2.CalculationRequest()
+            
+            $basketsubtotal1 : com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket")
+            $segmentmatch2 : com.adeo.lys.model.v2.SegmentMatch()
+            $advantagehistories5 : com.adeo.lys.model.v2.AdvantageHistories()
+            $advantagehistories4 : com.adeo.lys.model.v2.AdvantageHistories()
+            $context0 : com.adeo.lys.model.v2.Context()
+        then
+            if ( !($context0.getDateTime() >=LocalDateTime.parse("2025-12-01T00:00") && $context0.getDateTime() <=LocalDateTime.parse("2025-12-31T23:59:59"))) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition0 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition0.setErrorCode(46);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition0);
+                return;
+             }
+            if ( !($basketsubtotal1.getSubtotalAmount() >"1")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition1 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition1.setErrorCode(4);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition1);
+                return;
+             }
+            if ( !($segmentmatch2.getType() =="POS" && $segmentmatch2.getCode() =="250")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition2 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition2.setErrorCode(41);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition2);
+                return;
+             }
+            if ($cc.getUnfulfilledConditions().isEmpty()) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition3 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition3.setErrorCode(1);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition3);
+                return;
+             }
+             if (!$advantagehistories4.getHistories().isEmpty()) {
+               boolean hasHistoryWithTriggeredCount = false;
+                for (com.adeo.lys.model.v2.AdvantageHistory history : $advantagehistories4.getHistories()) {
+                    if (history.getAdvantageId() ==442 && history.getTriggeredCount() >=1) {
+                      com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition4 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                      unfulfilledCondition4.setErrorCode(47);
+                      $cc.getUnfulfilledConditions().add(unfulfilledCondition4);
+                      return;
+                    }
+                }            }
+             if (!$advantagehistories5.getHistories().isEmpty()) {
+               boolean hasHistoryWithTriggeredCount = false;
+                for (com.adeo.lys.model.v2.AdvantageHistory history : $advantagehistories5.getHistories()) {
+                    if (history.getActivationCode() =="PROMO51202" && history.getTotalTriggeredCount() >=2500) {
+                      com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition5 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                      unfulfilledCondition5.setErrorCode(48);
+                      $cc.getUnfulfilledConditions().add(unfulfilledCondition5);
+                      return;
+                    }
+                }            }
+    end

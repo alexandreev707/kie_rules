@@ -1,0 +1,70 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "LMKITCHEN_REACTIVATION_unfulfilledConditions"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9900"
+    when
+            com.adeo.lys.model.v2.ActivationCode(value == "LMKITCHEN")
+            not (com.adeo.lys.model.v2.LineReduction(triggeredPromoCode == "LMKITCHEN") )
+            not (com.adeo.lys.model.v2.BasketReduction(triggeredPromoCode == "LMKITCHEN") )
+            not (com.adeo.lys.model.v2.Discount(triggeredPromoCode == "LMKITCHEN") )
+            $cc : com.adeo.lys.model.v2.CalculationRequest()
+            $basketsubtotal2 : com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket")
+            
+            $advantagehistories5 : com.adeo.lys.model.v2.AdvantageHistories()
+            $context1 : com.adeo.lys.model.v2.Context()
+            $advantagehistories4 : com.adeo.lys.model.v2.AdvantageHistories()
+            $context0 : com.adeo.lys.model.v2.Context()
+        then
+            if ( !($context0.getDateTime() >=LocalDateTime.parse("2024-10-14T00:00") && $context0.getDateTime() <=LocalDateTime.parse("2024-10-27T23:59:59"))) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition0 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition0.setErrorCode(46);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition0);
+                return;
+             }
+            if ( !(java.util.Arrays.asList("169","3").contains($context1.getEntityId()))) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition1 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition1.setErrorCode(9);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition1);
+                return;
+             }
+            if ( !($basketsubtotal2.getSubtotalAmount() >="150000")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition2 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition2.setErrorCode(4);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition2);
+                return;
+             }
+            if ($cc.getUnfulfilledConditions().isEmpty()) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition3 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition3.setErrorCode(1);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition3);
+                return;
+             }
+             if (!$advantagehistories4.getHistories().isEmpty()) {
+               boolean hasHistoryWithTriggeredCount = false;
+                for (com.adeo.lys.model.v2.AdvantageHistory history : $advantagehistories4.getHistories()) {
+                    if (history.getAdvantageId() ==950 && history.getTriggeredCount() >=1) {
+                      com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition4 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                      unfulfilledCondition4.setErrorCode(47);
+                      $cc.getUnfulfilledConditions().add(unfulfilledCondition4);
+                      return;
+                    }
+                }            }
+             if (!$advantagehistories5.getHistories().isEmpty()) {
+               boolean hasHistoryWithTriggeredCount = false;
+                for (com.adeo.lys.model.v2.AdvantageHistory history : $advantagehistories5.getHistories()) {
+                    if (history.getActivationCode() =="LMKITCHEN" && history.getTotalTriggeredCount() >=1000000) {
+                      com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition5 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                      unfulfilledCondition5.setErrorCode(48);
+                      $cc.getUnfulfilledConditions().add(unfulfilledCondition5);
+                      return;
+                    }
+                }            }
+    end

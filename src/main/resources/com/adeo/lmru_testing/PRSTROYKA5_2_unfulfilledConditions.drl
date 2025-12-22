@@ -1,0 +1,63 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "PRSTROYKA5_2_unfulfilledConditions"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9700"
+    when
+            com.adeo.lys.model.v2.ActivationCode(value == "PRSTROYKA5")
+            not (com.adeo.lys.model.v2.LineReduction(triggeredPromoCode == "PRSTROYKA5") )
+            not (com.adeo.lys.model.v2.BasketReduction(triggeredPromoCode == "PRSTROYKA5") )
+            not (com.adeo.lys.model.v2.Discount(triggeredPromoCode == "PRSTROYKA5") )
+            $cc : com.adeo.lys.model.v2.CalculationRequest()
+            
+            $advantagehistories3 : com.adeo.lys.model.v2.AdvantageHistories()
+            $context1 : com.adeo.lys.model.v2.Context()
+            $advantagehistories4 : com.adeo.lys.model.v2.AdvantageHistories()
+            $context0 : com.adeo.lys.model.v2.Context()
+        then
+            if ( !($context0.getDateTime() >=LocalDateTime.parse("2025-11-17T00:00") && $context0.getDateTime() <=LocalDateTime.parse("2025-12-21T23:59:59") && $context0.getChannel() =="POS")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition0 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition0.setErrorCode(46);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition0);
+                return;
+             }
+            if ( !(java.util.Arrays.asList("165").contains($context1.getEntityId()))) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition1 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition1.setErrorCode(9);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition1);
+                return;
+             }
+            if ($cc.getUnfulfilledConditions().isEmpty()) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition2 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition2.setErrorCode(1);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition2);
+                return;
+             }
+             if (!$advantagehistories3.getHistories().isEmpty()) {
+               boolean hasHistoryWithTriggeredCount = false;
+                for (com.adeo.lys.model.v2.AdvantageHistory history : $advantagehistories3.getHistories()) {
+                    if (history.getAdvantageId() ==471 && history.getTriggeredCount() >=5) {
+                      com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition3 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                      unfulfilledCondition3.setErrorCode(47);
+                      $cc.getUnfulfilledConditions().add(unfulfilledCondition3);
+                      return;
+                    }
+                }            }
+             if (!$advantagehistories4.getHistories().isEmpty()) {
+               boolean hasHistoryWithTriggeredCount = false;
+                for (com.adeo.lys.model.v2.AdvantageHistory history : $advantagehistories4.getHistories()) {
+                    if (history.getActivationCode() =="PRSTROYKA5" && history.getTotalTriggeredCount() >=20000) {
+                      com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition4 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                      unfulfilledCondition4.setErrorCode(48);
+                      $cc.getUnfulfilledConditions().add(unfulfilledCondition4);
+                      return;
+                    }
+                }            }
+    end

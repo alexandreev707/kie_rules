@@ -1,0 +1,91 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "1000_6000_SOKOLNIKI"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9901"
+    when
+            (com.adeo.lys.model.v2.ActiveTypology(name=="punctual") or not com.adeo.lys.model.v2.ActiveTypology())
+            context : com.adeo.lys.model.v2.Context(dateTime >= LocalDateTime.parse("2025-07-01T00:00") , dateTime <= LocalDateTime.parse("2025-07-31T23:59:59"))
+            not (com.adeo.lys.model.v2.AdvantageHistory(advantageId == 61 , triggeredCount >= 2) )
+            com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("VALID") contains status)
+            com.adeo.lys.model.v2.BasketSubTotal(subtotalAmount <= "500000" , key == "totalTicket")
+            com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("1") contains type)
+            com.adeo.lys.model.v2.ActivationCode(value == "1000_6000_SOKOLNIKI")
+            com.adeo.lys.model.v2.SegmentMatch(type == "POS" , code == "250")
+            			 tot : BigDecimal(intValue >= 6000) from accumulate (
+			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "punctual")
+			&& com.adeo.lys.model.v2.SegmentMatch(smlist contains this ,code=="750",type=="LIST"),
+				init( BigDecimal result = new BigDecimal(0.0); ),
+				action( result = result.add(qua.multiply(ua)); ),
+				reverse( result = result.min(qua.multiply(ua)); ),
+				result( result )
+		)
+
+		 totqua : BigDecimal(intValue >= 0) from accumulate (
+			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "punctual")
+			&& com.adeo.lys.model.v2.SegmentMatch(smlist contains this ,code=="750",type=="LIST"),
+				init( BigDecimal result = new BigDecimal(0.0); ),
+				action( result = result.add(qua); ),
+				reverse( result = result.min(qua); ),
+				result( result )
+		)
+
+            com.adeo.lys.model.v2.BasketSubTotal(subtotalAmount > "0" , key == "totalTicket")
+            			tlbts : java.util.ArrayList( size>0) from accumulate (
+			    ll : com.adeo.lys.model.v2.TotalLineReductionByTypology(typology == "punctual"),
+			    collectList(ll))
+
+            concernedLines : java.util.ArrayList( size>0) from accumulate (
+				oo : com.adeo.lys.model.v2.Line(excludedDiscountCategories not contains "punctual", smlist1 : segmentMatches, nn : number, type : type,  java.util.Arrays.asList("2P","3P") not contains offerType)
+				&& ol : com.adeo.lys.model.v2.TotalLineReduction(number == nn , totalDiscount : amount)
+				&& com.adeo.lys.model.v2.ReductionLineType( lineType == type, code == "punctual")
+				&& not com.adeo.lys.model.v2.LineReduction( number==nn,key=="1000_6000_SOKOLNIKI")
+				&& not com.adeo.lys.model.v2.RemovedReduction( lineNumber==nn,lineReduction.key=="1000_6000_SOKOLNIKI")
+				&& com.adeo.lys.model.v2.SegmentMatch(smlist1 contains this ,code=="750",type=="LIST"),
+			collectList(new com.adeo.lys.model.v2.CompleteLine(oo,ol)))
+        then
+            			BigDecimal each = BigDecimal.valueOf(1);
+			for (Object  o : concernedLines){
+			com.adeo.lys.model.v2.CompleteLine completeLine=(com.adeo.lys.model.v2.CompleteLine)o;
+			com.adeo.lys.model.v2.Line line = completeLine.getLine();
+			com.adeo.lys.model.v2.TotalLineReduction totalReduction = completeLine.getTotalLineReduction();
+			BigDecimal totalLineReduction = totalReduction.getAmount();
+			for (com.adeo.lys.model.v2.TotalLineReductionByTypology tlbt : tlbts){
+			    if (tlbt.getNumber().equals(line.getNumber())){
+			        totalLineReduction = totalLineReduction.subtract(tlbt.getAmount());
+			    }
+			}
+			com.adeo.lys.model.v2.LineReduction fact0 = new com.adeo.lys.model.v2.LineReduction();
+			fact0.setNumber(line.getNumber());
+			fact0.setValue(BigDecimal.valueOf(1000));
+			BigDecimal result = null; 
+			result = BigDecimal.valueOf(1000).multiply(each).multiply(line.getQuantity().multiply(line.getUnitaryAmount())).subtract(totalLineReduction).divide(tot, 0, RoundingMode.DOWN);
+			result = result.min(line.getQuantity().multiply(line.getUnitaryAmount()).subtract(totalLineReduction)).setScale(0, RoundingMode.DOWN);
+			fact0.setAmount(result);
+			fact0.setMultiline(true);
+			fact0.setKey("1000_6000_SOKOLNIKI"); 
+			fact0.setDescription("1000_6000_SOKOLNIKI"); 
+			fact0.setTypology("punctual"); 
+			fact0.setUnit("FIXED"); 
+			fact0.setCalcModeCode("FIXED"); 
+			fact0.setOfferCode("PROMO_RFM_SEGMENTI"); 
+			fact0.setRewardType("DISCOUNT"); 
+			fact0.setAdvantageCode("1000_6000_SOKOLNIKI"); 
+			fact0.setAdvantageId("61"); 
+			fact0.setTemplateCode("punctual"); 
+			fact0.setExternalCode("19"); 
+			fact0.setBenefType("PRODUCT_LIST"); 
+			fact0.setImpact("ON_TRANSACTION"); 
+			fact0.setShortLabel("1000_6000_SOKOLNIKI"); 
+			fact0.setLimited(true); 
+			fact0.setTriggeredPromoCode("1000_6000_SOKOLNIKI"); 
+		    insert( fact0 );
+		}
+    end

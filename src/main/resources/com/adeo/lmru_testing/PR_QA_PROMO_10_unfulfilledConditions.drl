@@ -1,0 +1,41 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "PR_QA_PROMO_10_unfulfilledConditions"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9899"
+    when
+            com.adeo.lys.model.v2.ActivationCode(value == "PRQAPROMO10")
+            not (com.adeo.lys.model.v2.LineReduction(triggeredPromoCode == "PRQAPROMO10") )
+            not (com.adeo.lys.model.v2.BasketReduction(triggeredPromoCode == "PRQAPROMO10") )
+            not (com.adeo.lys.model.v2.Discount(triggeredPromoCode == "PRQAPROMO10") )
+            $cc : com.adeo.lys.model.v2.CalculationRequest()
+            $basketsubtotal2 : com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket")
+            $basketsubtotal1 : com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket")
+            $context0 : com.adeo.lys.model.v2.Context()
+        then
+            if ( !($context0.getDateTime() >=LocalDateTime.parse("2025-04-17T00:00") && $context0.getDateTime() <=LocalDateTime.parse("2025-04-30T23:59:59"))) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition0 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition0.setErrorCode(46);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition0);
+                return;
+             }
+            if ( !($basketsubtotal1.getSubtotalAmount() <="400")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition1 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition1.setErrorCode(4);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition1);
+                return;
+             }
+            if ( !($basketsubtotal2.getSubtotalAmount() >="200")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition2 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition2.setErrorCode(4);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition2);
+                return;
+             }
+    end

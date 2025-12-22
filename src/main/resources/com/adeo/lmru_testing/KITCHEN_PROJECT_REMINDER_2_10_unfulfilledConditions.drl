@@ -1,0 +1,45 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "KITCHEN_PROJECT_REMINDER_2_10_unfulfilledConditions"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9650"
+    when
+            com.adeo.lys.model.v2.ActivationCode(value == "KITCHEN_PROJECT_REMINDER")
+            not (com.adeo.lys.model.v2.LineReduction(triggeredPromoCode == "KITCHEN_PROJECT_REMINDER") )
+            not (com.adeo.lys.model.v2.BasketReduction(triggeredPromoCode == "KITCHEN_PROJECT_REMINDER") )
+            not (com.adeo.lys.model.v2.Discount(triggeredPromoCode == "KITCHEN_PROJECT_REMINDER") )
+            $cc : com.adeo.lys.model.v2.CalculationRequest()
+            
+            $advantagehistories2 : com.adeo.lys.model.v2.AdvantageHistories()
+            $context0 : com.adeo.lys.model.v2.Context()
+        then
+            if ( !($context0.getDateTime() >=LocalDateTime.parse("2025-10-04T00:00") && $context0.getDateTime() <=LocalDateTime.parse("2025-11-03T23:59:59"))) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition0 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition0.setErrorCode(46);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition0);
+                return;
+             }
+            if ($cc.getUnfulfilledConditions().isEmpty()) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition1 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition1.setErrorCode(1);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition1);
+                return;
+             }
+             if (!$advantagehistories2.getHistories().isEmpty()) {
+               boolean hasHistoryWithTriggeredCount = false;
+                for (com.adeo.lys.model.v2.AdvantageHistory history : $advantagehistories2.getHistories()) {
+                    if (history.getAdvantageId() ==217 && history.getTriggeredCount() >=2) {
+                      com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition2 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                      unfulfilledCondition2.setErrorCode(47);
+                      $cc.getUnfulfilledConditions().add(unfulfilledCondition2);
+                      return;
+                    }
+                }            }
+    end

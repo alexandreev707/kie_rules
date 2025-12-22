@@ -1,0 +1,73 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru_testing;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "PR_ALL_R0_DQ_10_A_MVP_A_unfulfilledConditions"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "9900"
+    when
+            com.adeo.lys.model.v2.ActivationCode(value == "PRMVP")
+            not (com.adeo.lys.model.v2.LineReduction(triggeredPromoCode == "PRMVP") )
+            not (com.adeo.lys.model.v2.BasketReduction(triggeredPromoCode == "PRMVP") )
+            not (com.adeo.lys.model.v2.Discount(triggeredPromoCode == "PRMVP") )
+            $cc : com.adeo.lys.model.v2.CalculationRequest()
+            $basketsubtotal3 : com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket")
+            
+            $basketsubtotal1 : com.adeo.lys.model.v2.BasketSubTotal(key == "totalTicket")
+            $context2 : com.adeo.lys.model.v2.Context()
+            $advantagehistories6 : com.adeo.lys.model.v2.AdvantageHistories()
+            $context0 : com.adeo.lys.model.v2.Context()
+            $loyalty4 : com.adeo.lys.model.v2.Loyalty()
+        then
+            if ( !($context0.getDateTime() >=LocalDateTime.parse("2024-12-10T00:00") && $context0.getDateTime() <=LocalDateTime.parse("2024-12-24T23:59:59"))) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition0 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition0.setErrorCode(46);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition0);
+                return;
+             }
+            if ( !($basketsubtotal1.getSubtotalAmount() <="300000")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition1 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition1.setErrorCode(4);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition1);
+                return;
+             }
+            if ( !(java.util.Arrays.asList("25","53","38","23","37","82").contains($context2.getEntityId()))) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition2 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition2.setErrorCode(9);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition2);
+                return;
+             }
+            if ( !($basketsubtotal3.getSubtotalAmount() >="5000")) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition3 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition3.setErrorCode(4);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition3);
+                return;
+             }
+            if ( !(java.util.Arrays.asList("VALID").contains($loyalty4.getStatus()))) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition4 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition4.setErrorCode(3);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition4);
+                return;
+             }
+            if ($cc.getUnfulfilledConditions().isEmpty()) {
+                            com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition5 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                unfulfilledCondition5.setErrorCode(1);
+                $cc.getUnfulfilledConditions().add(unfulfilledCondition5);
+                return;
+             }
+             if (!$advantagehistories6.getHistories().isEmpty()) {
+               boolean hasHistoryWithTriggeredCount = false;
+                for (com.adeo.lys.model.v2.AdvantageHistory history : $advantagehistories6.getHistories()) {
+                    if (history.getAdvantageId() ==1202 && history.getTriggeredCount() >=1) {
+                      com.adeo.lys.model.v2.UnfulfilledCondition unfulfilledCondition6 = new com.adeo.lys.model.v2.UnfulfilledCondition();
+                      unfulfilledCondition6.setErrorCode(47);
+                      $cc.getUnfulfilledConditions().add(unfulfilledCondition6);
+                      return;
+                    }
+                }            }
+    end

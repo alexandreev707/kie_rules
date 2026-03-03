@@ -1,0 +1,79 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "TEST_POST_10007964"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "6971"
+    when
+            (com.adeo.lys.model.v2.ActiveTypology(name=="points_partner") or not com.adeo.lys.model.v2.ActiveTypology())
+            context : com.adeo.lys.model.v2.Context(dateTime >= LocalDateTime.parse("1970-12-30T21:00") , dateTime <= LocalDateTime.parse("2999-12-30T23:59:59"))
+            			 tot : BigDecimal(intValue >= 0) from accumulate (
+			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "points_partner")
+			&& com.adeo.lys.model.v2.SegmentMatch(smlist contains this ,code=="110",type=="LIST"),
+				init( BigDecimal result = new BigDecimal(0.0); ),
+				action( result = result.add(qua.multiply(ua)); ),
+				reverse( result = result.min(qua.multiply(ua)); ),
+				result( result )
+		)
+
+		 totqua : BigDecimal(intValue >= 1) from accumulate (
+			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "points_partner")
+			&& com.adeo.lys.model.v2.SegmentMatch(smlist contains this ,code=="110",type=="LIST"),
+				init( BigDecimal result = new BigDecimal(0.0); ),
+				action( result = result.add(qua); ),
+				reverse( result = result.min(qua); ),
+				result( result )
+		)
+
+            com.adeo.lys.model.v2.Context(java.util.Arrays.asList("21","35") contains entityId)
+            com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("VALID") contains status)
+            null(null)
+            not (com.adeo.lys.model.v2.Discount(key == "TEST_POST_10007964") )
+            concernedLines : java.util.ArrayList( size>0) from accumulate (
+				oo : com.adeo.lys.model.v2.Line(excludedDiscountCategories not contains "points_partner", smlist1 : segmentMatches, nn : number, type : type,  java.util.Arrays.asList("2P","3P") not contains offerType)
+				&& ol : com.adeo.lys.model.v2.TotalLineReduction(number == nn , totalDiscount : amount)
+				&& com.adeo.lys.model.v2.ReductionLineType( lineType == type, code == "points_partner")
+				&& not com.adeo.lys.model.v2.LineReduction( number==nn,key=="TEST_POST_10007964")
+				&& not com.adeo.lys.model.v2.RemovedReduction( lineNumber==nn,lineReduction.key=="TEST_POST_10007964")
+				&& com.adeo.lys.model.v2.SegmentMatch(smlist1 contains this ,code=="110",type=="LIST"),
+			collectList(new com.adeo.lys.model.v2.CompleteLine(oo,ol)))
+        then
+            			BigDecimal each = BigDecimal.valueOf(1);
+			for (Object  o : concernedLines){
+			com.adeo.lys.model.v2.CompleteLine completeLine=(com.adeo.lys.model.v2.CompleteLine)o;
+			com.adeo.lys.model.v2.Line line = completeLine.getLine();
+			com.adeo.lys.model.v2.TotalLineReduction totalReduction = completeLine.getTotalLineReduction();
+			BigDecimal totalLineReduction = totalReduction.getAmount();
+			com.adeo.lys.model.v2.LineReduction fact0 = new com.adeo.lys.model.v2.LineReduction();
+			fact0.setNumber(line.getNumber());
+			fact0.setValue(BigDecimal.valueOf(10));
+			BigDecimal result = null; 
+			result = line.getQuantity().multiply(line.getUnitaryAmount()).subtract(totalLineReduction).multiply(BigDecimal.valueOf(10).divide(100)).setScale(0, RoundingMode.DOWN);
+			fact0.setAmount(result);
+			fact0.setValue(result);
+			fact0.setMultiline(true);
+			fact0.setKey("TEST_POST_10007964"); 
+			fact0.setDescription("TEST_POST_10007964"); 
+			fact0.setTypology("points_partner"); 
+			fact0.setUnit("POINT"); 
+			fact0.setCalcModeCode("PERCENT"); 
+			fact0.setOfferCode("TEST_POSTAVSHIK_10007964"); 
+			fact0.setRewardType("UNIT"); 
+			fact0.setAdvantageCode("TEST_POST_10007964"); 
+			fact0.setAdvantageId("132"); 
+			fact0.setTemplateCode("points_partner"); 
+			fact0.setExternalCode("12345"); 
+			fact0.setBenefType("PRODUCT_LIST"); 
+			fact0.setImpact("ON_TRANSACTION"); 
+			fact0.setEarnKind("TRN"); 
+			fact0.setShortLabel("TEST_POST_10007964"); 
+			fact0.setLimited(false); 
+		    insert( fact0 );
+		}
+    end

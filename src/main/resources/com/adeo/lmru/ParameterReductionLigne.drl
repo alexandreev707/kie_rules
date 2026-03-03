@@ -1,0 +1,186 @@
+package com.adeo.lmru;
+
+
+rule "ParameterReductionLigne_1"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "common_promocodes" );
+		ii.setPriority( 30 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "common_promocodes" );
+		fact1.setCodeCompatible( "common_promocodes" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionLineType fact2 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact2.setCode( "common_promocodes" );
+		fact2.setLineType( "ORDER_VALIDATION" );
+		insertLogical( fact2 );
+		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact3.setCode( "common_promocodes" );
+		fact3.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact3 );
+		com.adeo.lys.model.v2.ReductionLineType fact4 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact4.setCode( "common_promocodes" );
+		fact4.setLineType( "SALE" );
+		insertLogical( fact4 );	end
+
+rule "ParameterReductionLigne_2"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "unique_promocodes" );
+		ii.setPriority( 35 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "unique_promocodes" );
+		fact1.setCodeCompatible( "unique_promocodes" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionLineType fact2 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact2.setCode( "unique_promocodes" );
+		fact2.setLineType( "ORDER_VALIDATION" );
+		insertLogical( fact2 );
+		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact3.setCode( "unique_promocodes" );
+		fact3.setLineType( "SALE" );
+		insertLogical( fact3 );
+		com.adeo.lys.model.v2.ReductionLineType fact4 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact4.setCode( "unique_promocodes" );
+		fact4.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact4 );	end
+
+rule "ParameterReductionLigne_3"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "moscow_more_points" );
+		ii.setPriority( 201 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "moscow_more_points" );
+		fact1.setCodeCompatible( "moscow_more_points" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionCompatible fact2 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact2.setCode( "moscow_more_points" );
+		fact2.setCodeCompatible( "moscow_points" );
+		insertLogical( fact2 );
+		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact3.setCode( "moscow_more_points" );
+		fact3.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact3 );	end
+
+rule "ParameterReductionLigne_4"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "krasnodar_more_points" );
+		ii.setPriority( 202 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "krasnodar_more_points" );
+		fact1.setCodeCompatible( "krasnodar_more_points" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionCompatible fact2 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact2.setCode( "krasnodar_more_points" );
+		fact2.setCodeCompatible( "krasnodar_points" );
+		insertLogical( fact2 );
+		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact3.setCode( "krasnodar_more_points" );
+		fact3.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact3 );	end
+
+rule "ParameterReductionLigne_5"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "points" );
+		ii.setPriority( 300 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "points" );
+		fact1.setCodeCompatible( "points" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionLineType fact2 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact2.setCode( "points" );
+		fact2.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact2 );	end
+
+rule "ParameterReductionLigne_6"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "moscow_points" );
+		ii.setPriority( 301 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "moscow_points" );
+		fact1.setCodeCompatible( "moscow_points" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionCompatible fact2 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact2.setCode( "moscow_points" );
+		fact2.setCodeCompatible( "moscow_more_points" );
+		insertLogical( fact2 );
+		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact3.setCode( "moscow_points" );
+		fact3.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact3 );	end
+
+rule "ParameterReductionLigne_7"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "krasnodar_points" );
+		ii.setPriority( 302 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "krasnodar_points" );
+		fact1.setCodeCompatible( "krasnodar_points" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionCompatible fact2 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact2.setCode( "krasnodar_points" );
+		fact2.setCodeCompatible( "krasnodar_more_points" );
+		insertLogical( fact2 );
+		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact3.setCode( "krasnodar_points" );
+		fact3.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact3 );	end
+
+rule "ParameterReductionLigne_8"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "points_partner" );
+		ii.setPriority( 303 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "points_partner" );
+		fact1.setCodeCompatible( "points_partner" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionLineType fact2 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact2.setCode( "points_partner" );
+		fact2.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact2 );	end

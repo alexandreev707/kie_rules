@@ -1,0 +1,80 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "NIKITA_TEST_REGIONS"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "7001"
+    when
+            (com.adeo.lys.model.v2.ActiveTypology(name=="points") or not com.adeo.lys.model.v2.ActiveTypology())
+            context : com.adeo.lys.model.v2.Context(dateTime >= LocalDateTime.parse("2026-02-26T22:00") , dateTime <= LocalDateTime.parse("2026-02-27T23:59:59"))
+            com.adeo.lys.model.v2.SegmentMatch(type == "POS" , code == "9" , type == "POS" , code == "9")
+            			 tot : BigDecimal(intValue >= 1) from accumulate (
+			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "points")
+			&& com.adeo.lys.model.v2.SegmentMatch(smlist contains this ,code=="91",type=="LIST"),
+				init( BigDecimal result = new BigDecimal(0.0); ),
+				action( result = result.add(qua.multiply(ua)); ),
+				reverse( result = result.min(qua.multiply(ua)); ),
+				result( result )
+		)
+
+		 totqua : BigDecimal(intValue >= 0) from accumulate (
+			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "points")
+			&& com.adeo.lys.model.v2.SegmentMatch(smlist contains this ,code=="91",type=="LIST"),
+				init( BigDecimal result = new BigDecimal(0.0); ),
+				action( result = result.add(qua); ),
+				reverse( result = result.min(qua); ),
+				result( result )
+		)
+
+            com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("1") contains type)
+            com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("VALID") contains status)
+            com.adeo.lys.model.v2.BasketSubTotal(subtotalAmount > "0" , key == "totalTicket")
+            not (com.adeo.lys.model.v2.Discount(key == "NIKITA_TEST_REGIONS") )
+            concernedLines : java.util.ArrayList( size>0) from accumulate (
+				oo : com.adeo.lys.model.v2.Line(excludedDiscountCategories not contains "points", smlist1 : segmentMatches, nn : number, type : type,  java.util.Arrays.asList("2P","3P") not contains offerType)
+				&& ol : com.adeo.lys.model.v2.TotalLineReduction(number == nn , totalDiscount : amount)
+				&& com.adeo.lys.model.v2.ReductionLineType( lineType == type, code == "points")
+				&& not com.adeo.lys.model.v2.LineReduction( number==nn,key=="NIKITA_TEST_REGIONS")
+				&& not com.adeo.lys.model.v2.RemovedReduction( lineNumber==nn,lineReduction.key=="NIKITA_TEST_REGIONS")
+				&& com.adeo.lys.model.v2.SegmentMatch(smlist1 contains this ,code=="91",type=="LIST"),
+			collectList(new com.adeo.lys.model.v2.CompleteLine(oo,ol)))
+        then
+            			BigDecimal each = BigDecimal.valueOf(1);
+			for (Object  o : concernedLines){
+			com.adeo.lys.model.v2.CompleteLine completeLine=(com.adeo.lys.model.v2.CompleteLine)o;
+			com.adeo.lys.model.v2.Line line = completeLine.getLine();
+			com.adeo.lys.model.v2.TotalLineReduction totalReduction = completeLine.getTotalLineReduction();
+			BigDecimal totalLineReduction = totalReduction.getAmount();
+			com.adeo.lys.model.v2.LineReduction fact0 = new com.adeo.lys.model.v2.LineReduction();
+			fact0.setNumber(line.getNumber());
+			fact0.setValue(BigDecimal.valueOf(0.5));
+			BigDecimal result = null; 
+			result = line.getQuantity().multiply(line.getUnitaryAmount()).subtract(totalLineReduction).multiply(BigDecimal.valueOf(0.5).divide(100)).setScale(0, RoundingMode.DOWN);
+			fact0.setAmount(result);
+			fact0.setValue(result);
+			fact0.setMultiline(true);
+			fact0.setKey("NIKITA_TEST_REGIONS"); 
+			fact0.setDescription("NIKITA_TEST_REGIONS"); 
+			fact0.setTypology("points"); 
+			fact0.setUnit("POINT"); 
+			fact0.setCalcModeCode("PERCENT"); 
+			fact0.setOfferCode("LOYALTY_PROGRAM_B2C_POINTS"); 
+			fact0.setRewardType("UNIT"); 
+			fact0.setAdvantageCode("NIKITA_TEST_REGIONS"); 
+			fact0.setAdvantageId("134"); 
+			fact0.setTemplateCode("points"); 
+			fact0.setExternalCode("5"); 
+			fact0.setBenefType("PRODUCT_LIST"); 
+			fact0.setImpact("ON_TRANSACTION"); 
+			fact0.setEarnKind("TRN"); 
+			fact0.setShortLabel("NIKITA_TEST_REGIONS"); 
+			fact0.setLimited(false); 
+		    insert( fact0 );
+		}
+    end

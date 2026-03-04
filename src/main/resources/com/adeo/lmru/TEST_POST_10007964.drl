@@ -68,7 +68,7 @@ rule "TEST_POST_10007964"
 			fact0.setAdvantageCode("TEST_POST_10007964"); 
 			fact0.setAdvantageId("132"); 
 			fact0.setTemplateCode("points_partner"); 
-			fact0.setExternalCode("12345"); 
+			fact0.setExternalCode("3"); 
 			fact0.setBenefType("PRODUCT_LIST"); 
 			fact0.setImpact("ON_TRANSACTION"); 
 			fact0.setEarnKind("TRN"); 

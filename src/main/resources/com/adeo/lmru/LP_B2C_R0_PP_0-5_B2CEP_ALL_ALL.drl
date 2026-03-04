@@ -32,9 +32,9 @@ rule "LP_B2C_R0_PP_0-5_B2CEP_ALL_ALL"
 				result( result )
 		)
 
-            com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("1") contains type)
             com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("VALID") contains status)
             com.adeo.lys.model.v2.BasketSubTotal(subtotalAmount > "0" , key == "totalTicket")
+            com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("1") contains type)
             not (com.adeo.lys.model.v2.Discount(key == "LP_B2C_R0_PP_0-5_B2CEP_ALL_ALL") )
             concernedLines : java.util.ArrayList( size>0) from accumulate (
 				oo : com.adeo.lys.model.v2.Line(excludedDiscountCategories not contains "points", smlist1 : segmentMatches, nn : number, type : type,  java.util.Arrays.asList("2P","3P") not contains offerType)

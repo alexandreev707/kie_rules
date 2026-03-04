@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 rule "5moscow"
     dialect "mvel"
     ruleflow-group "reductionligne"
-    salience "7991"
+    salience "6971"
     when
-            (com.adeo.lys.model.v2.ActiveTypology(name=="moscow_more_points") or not com.adeo.lys.model.v2.ActiveTypology())
+            (com.adeo.lys.model.v2.ActiveTypology(name=="points_partner") or not com.adeo.lys.model.v2.ActiveTypology())
             context : com.adeo.lys.model.v2.Context(dateTime >= LocalDateTime.parse("1970-12-30T21:00") , dateTime <= LocalDateTime.parse("2999-12-30T23:59:59"))
             com.adeo.lys.model.v2.SegmentMatch(type == "POS" , code == "9")
             			 tot : BigDecimal(intValue >= 1) from accumulate (
-			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "moscow_more_points")
+			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "points_partner")
 			&& com.adeo.lys.model.v2.SegmentMatch(smlist contains this ,code=="113",type=="LIST"),
 				init( BigDecimal result = new BigDecimal(0.0); ),
 				action( result = result.add(qua.multiply(ua)); ),
@@ -24,7 +24,7 @@ rule "5moscow"
 		)
 
 		 totqua : BigDecimal(intValue >= 0) from accumulate (
-			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "moscow_more_points")
+			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "points_partner")
 			&& com.adeo.lys.model.v2.SegmentMatch(smlist contains this ,code=="113",type=="LIST"),
 				init( BigDecimal result = new BigDecimal(0.0); ),
 				action( result = result.add(qua); ),
@@ -35,9 +35,9 @@ rule "5moscow"
             com.adeo.lys.model.v2.Loyalty(java.util.Arrays.asList("VALID") contains status)
             not (com.adeo.lys.model.v2.Discount(key == "5moscow") )
             concernedLines : java.util.ArrayList( size>0) from accumulate (
-				oo : com.adeo.lys.model.v2.Line(excludedDiscountCategories not contains "moscow_more_points", smlist1 : segmentMatches, nn : number, type : type,  java.util.Arrays.asList("2P","3P") not contains offerType)
+				oo : com.adeo.lys.model.v2.Line(excludedDiscountCategories not contains "points_partner", smlist1 : segmentMatches, nn : number, type : type,  java.util.Arrays.asList("2P","3P") not contains offerType)
 				&& ol : com.adeo.lys.model.v2.TotalLineReduction(number == nn , totalDiscount : amount)
-				&& com.adeo.lys.model.v2.ReductionLineType( lineType == type, code == "moscow_more_points")
+				&& com.adeo.lys.model.v2.ReductionLineType( lineType == type, code == "points_partner")
 				&& not com.adeo.lys.model.v2.LineReduction( number==nn,key=="5moscow")
 				&& not com.adeo.lys.model.v2.RemovedReduction( lineNumber==nn,lineReduction.key=="5moscow")
 				&& com.adeo.lys.model.v2.SegmentMatch(smlist1 contains this ,code=="113",type=="LIST"),
@@ -59,14 +59,14 @@ rule "5moscow"
 			fact0.setMultiline(true);
 			fact0.setKey("5moscow"); 
 			fact0.setDescription("5moscow"); 
-			fact0.setTypology("moscow_more_points"); 
+			fact0.setTypology("points_partner"); 
 			fact0.setUnit("POINT"); 
 			fact0.setCalcModeCode("PERCENT"); 
 			fact0.setOfferCode("PA_B2C_5POINTS_MOSCOW"); 
 			fact0.setRewardType("UNIT"); 
 			fact0.setAdvantageCode("5moscow"); 
 			fact0.setAdvantageId("122"); 
-			fact0.setTemplateCode("moscow_more_points"); 
+			fact0.setTemplateCode("points_partner"); 
 			fact0.setExternalCode("3"); 
 			fact0.setBenefType("PRODUCT_LIST"); 
 			fact0.setImpact("ON_TRANSACTION"); 

@@ -61,6 +61,29 @@ rule "ParameterReductionLigne_3"
 	when
 	then
 		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "points_partner" );
+		ii.setPriority( 250 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "points_partner" );
+		fact1.setCodeCompatible( "points_partner" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionCompatible fact2 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact2.setCode( "points_partner" );
+		fact2.setCodeCompatible( "points" );
+		insertLogical( fact2 );
+		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact3.setCode( "points_partner" );
+		fact3.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact3 );	end
+
+rule "ParameterReductionLigne_4"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
 		ii.setCode( "points" );
 		ii.setPriority( 300 );
 		ii.setAsMany( false );
@@ -75,28 +98,5 @@ rule "ParameterReductionLigne_3"
 		insertLogical( fact2 );
 		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
 		fact3.setCode( "points" );
-		fact3.setLineType( "ORDER_TAKE_AWAY" );
-		insertLogical( fact3 );	end
-
-rule "ParameterReductionLigne_4"
-	ruleflow-group "validationinput"
-	dialect "mvel"
-	when
-	then
-		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
-		ii.setCode( "points_partner" );
-		ii.setPriority( 303 );
-		ii.setAsMany( false );
-		insert( ii );
-		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
-		fact1.setCode( "points_partner" );
-		fact1.setCodeCompatible( "points_partner" );
-		insertLogical( fact1 );
-		com.adeo.lys.model.v2.ReductionCompatible fact2 = new com.adeo.lys.model.v2.ReductionCompatible();
-		fact2.setCode( "points_partner" );
-		fact2.setCodeCompatible( "points" );
-		insertLogical( fact2 );
-		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
-		fact3.setCode( "points_partner" );
 		fact3.setLineType( "ORDER_TAKE_AWAY" );
 		insertLogical( fact3 );	end

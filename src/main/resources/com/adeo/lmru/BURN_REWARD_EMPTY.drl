@@ -10,7 +10,7 @@ import java.math.RoundingMode;
 rule "BURN_REWARD_EMPTY"
 	dialect "mvel"
 	ruleflow-group "reductionligne"
-    salience "-40000"
+    salience "3340"
 	when
 		(com.adeo.lys.model.v2.ActiveTypology(name=="empty") or not com.adeo.lys.model.v2.ActiveTypology())
 		bst : com.adeo.lys.model.v2.BasketSubTotal( key == "sousTotalBase" , tot : subtotalAmount != null )

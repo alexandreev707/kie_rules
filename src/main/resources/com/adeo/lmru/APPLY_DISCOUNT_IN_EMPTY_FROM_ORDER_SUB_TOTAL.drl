@@ -11,7 +11,7 @@ import java.math.RoundingMode;
 rule "APPLY_DISCOUNT_IN_EMPTY_FROM_ORDER_SUB_TOTAL"
 	dialect "mvel"
 	ruleflow-group "reductionligne"
-    salience "-39999"
+    salience "3341"
 	when
 		(com.adeo.lys.model.v2.ActiveTypology(name=="empty") or not com.adeo.lys.model.v2.ActiveTypology())
 		di : com.adeo.lys.model.v2.DiscountIn( ccode : code != null , unit == "PERCENT" , vv : value != null, typology=="empty", rewardId != null, fromOrderContext == true, subTotal == true)

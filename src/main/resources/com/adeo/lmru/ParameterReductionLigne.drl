@@ -104,7 +104,7 @@ rule "ParameterReductionLigne_5"
 	then
 		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
 		ii.setCode( "empty" );
-		ii.setPriority( 5000 );
+		ii.setPriority( 666 );
 		ii.setAsMany( false );
 		insert( ii );
 		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();

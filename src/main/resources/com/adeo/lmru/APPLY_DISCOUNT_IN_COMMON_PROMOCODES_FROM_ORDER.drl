@@ -11,7 +11,7 @@ import java.math.RoundingMode;
 rule "APPLY_DISCOUNT_IN_COMMON_PROMOCODES_FROM_ORDER"
 	dialect "mvel"
 	ruleflow-group "reductionligne"
-    salience "9701"
+    salience "9801"
 	when
 		(com.adeo.lys.model.v2.ActiveTypology(name=="common_promocodes") or not com.adeo.lys.model.v2.ActiveTypology())
 		di : com.adeo.lys.model.v2.DiscountIn( ccode : code != null , unit == "FIXED" , vv : value != null, typology=="common_promocodes", rewardIdToBurn == null, fromOrderContext == true, subTotal == false)

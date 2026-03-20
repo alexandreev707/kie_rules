@@ -11,7 +11,7 @@ import java.math.RoundingMode;
 rule "APPLY_DISCOUNT_IN_UNIQUE_PROMOCODES_TRN_FIXED"
 	dialect "mvel"
 	ruleflow-group "reductionligne"
-    salience "9650"
+    salience "9700"
 	when
 		(com.adeo.lys.model.v2.ActiveTypology(name=="unique_promocodes") or not com.adeo.lys.model.v2.ActiveTypology())
 		bst : com.adeo.lys.model.v2.BasketSubTotal( key == "sousTotalBase" , tot : subtotalAmount != null )

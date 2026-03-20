@@ -7,8 +7,43 @@ rule "ParameterReductionLigne_1"
 	when
 	then
 		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "punctual" );
+		ii.setPriority( 10 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "punctual" );
+		fact1.setCodeCompatible( "punctual" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionCompatible fact2 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact2.setCode( "punctual" );
+		fact2.setCodeCompatible( "points" );
+		insertLogical( fact2 );
+		com.adeo.lys.model.v2.ReductionCompatible fact3 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact3.setCode( "punctual" );
+		fact3.setCodeCompatible( "rank" );
+		insertLogical( fact3 );
+		com.adeo.lys.model.v2.ReductionLineType fact4 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact4.setCode( "punctual" );
+		fact4.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact4 );
+		com.adeo.lys.model.v2.ReductionLineType fact5 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact5.setCode( "punctual" );
+		fact5.setLineType( "ORDER_VALIDATION" );
+		insertLogical( fact5 );
+		com.adeo.lys.model.v2.ReductionLineType fact6 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact6.setCode( "punctual" );
+		fact6.setLineType( "SALE" );
+		insertLogical( fact6 );	end
+
+rule "ParameterReductionLigne_2"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
 		ii.setCode( "common_promocodes" );
-		ii.setPriority( 30 );
+		ii.setPriority( 20 );
 		ii.setAsMany( false );
 		insert( ii );
 		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
@@ -17,42 +52,15 @@ rule "ParameterReductionLigne_1"
 		insertLogical( fact1 );
 		com.adeo.lys.model.v2.ReductionLineType fact2 = new com.adeo.lys.model.v2.ReductionLineType();
 		fact2.setCode( "common_promocodes" );
-		fact2.setLineType( "ORDER_VALIDATION" );
+		fact2.setLineType( "ORDER_TAKE_AWAY" );
 		insertLogical( fact2 );
 		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
 		fact3.setCode( "common_promocodes" );
-		fact3.setLineType( "ORDER_TAKE_AWAY" );
+		fact3.setLineType( "ORDER_VALIDATION" );
 		insertLogical( fact3 );
 		com.adeo.lys.model.v2.ReductionLineType fact4 = new com.adeo.lys.model.v2.ReductionLineType();
 		fact4.setCode( "common_promocodes" );
 		fact4.setLineType( "SALE" );
-		insertLogical( fact4 );	end
-
-rule "ParameterReductionLigne_2"
-	ruleflow-group "validationinput"
-	dialect "mvel"
-	when
-	then
-		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
-		ii.setCode( "unique_promocodes" );
-		ii.setPriority( 35 );
-		ii.setAsMany( false );
-		insert( ii );
-		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
-		fact1.setCode( "unique_promocodes" );
-		fact1.setCodeCompatible( "unique_promocodes" );
-		insertLogical( fact1 );
-		com.adeo.lys.model.v2.ReductionLineType fact2 = new com.adeo.lys.model.v2.ReductionLineType();
-		fact2.setCode( "unique_promocodes" );
-		fact2.setLineType( "ORDER_VALIDATION" );
-		insertLogical( fact2 );
-		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
-		fact3.setCode( "unique_promocodes" );
-		fact3.setLineType( "SALE" );
-		insertLogical( fact3 );
-		com.adeo.lys.model.v2.ReductionLineType fact4 = new com.adeo.lys.model.v2.ReductionLineType();
-		fact4.setCode( "unique_promocodes" );
-		fact4.setLineType( "ORDER_TAKE_AWAY" );
 		insertLogical( fact4 );	end
 
 rule "ParameterReductionLigne_3"
@@ -61,24 +69,108 @@ rule "ParameterReductionLigne_3"
 	when
 	then
 		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
-		ii.setCode( "points_partner" );
+		ii.setCode( "unique_promocodes" );
+		ii.setPriority( 30 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "unique_promocodes" );
+		fact1.setCodeCompatible( "unique_promocodes" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionLineType fact2 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact2.setCode( "unique_promocodes" );
+		fact2.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact2 );
+		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact3.setCode( "unique_promocodes" );
+		fact3.setLineType( "ORDER_VALIDATION" );
+		insertLogical( fact3 );
+		com.adeo.lys.model.v2.ReductionLineType fact4 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact4.setCode( "unique_promocodes" );
+		fact4.setLineType( "SALE" );
+		insertLogical( fact4 );	end
+
+rule "ParameterReductionLigne_4"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "promo_for_classic_rank" );
+		ii.setPriority( 150 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "promo_for_classic_rank" );
+		fact1.setCodeCompatible( "promo_for_classic_rank" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionLineType fact2 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact2.setCode( "promo_for_classic_rank" );
+		fact2.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact2 );	end
+
+rule "ParameterReductionLigne_5"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "promo_action_discount" );
+		ii.setPriority( 215 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "promo_action_discount" );
+		fact1.setCodeCompatible( "promo_action_discount" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionLineType fact2 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact2.setCode( "promo_action_discount" );
+		fact2.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact2 );	end
+
+rule "ParameterReductionLigne_6"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "points_for_classic_rank" );
+		ii.setPriority( 218 );
+		ii.setAsMany( false );
+		insert( ii );
+		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact1.setCode( "points_for_classic_rank" );
+		fact1.setCodeCompatible( "points_for_classic_rank" );
+		insertLogical( fact1 );
+		com.adeo.lys.model.v2.ReductionLineType fact2 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact2.setCode( "points_for_classic_rank" );
+		fact2.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact2 );	end
+
+rule "ParameterReductionLigne_7"
+	ruleflow-group "validationinput"
+	dialect "mvel"
+	when
+	then
+		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
+		ii.setCode( "boosted_cashback" );
 		ii.setPriority( 250 );
 		ii.setAsMany( false );
 		insert( ii );
 		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
-		fact1.setCode( "points_partner" );
-		fact1.setCodeCompatible( "points_partner" );
+		fact1.setCode( "boosted_cashback" );
+		fact1.setCodeCompatible( "boosted_cashback" );
 		insertLogical( fact1 );
 		com.adeo.lys.model.v2.ReductionCompatible fact2 = new com.adeo.lys.model.v2.ReductionCompatible();
-		fact2.setCode( "points_partner" );
-		fact2.setCodeCompatible( "empty" );
+		fact2.setCode( "boosted_cashback" );
+		fact2.setCodeCompatible( "points" );
 		insertLogical( fact2 );
 		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
-		fact3.setCode( "points_partner" );
+		fact3.setCode( "boosted_cashback" );
 		fact3.setLineType( "ORDER_TAKE_AWAY" );
 		insertLogical( fact3 );	end
 
-rule "ParameterReductionLigne_4"
+rule "ParameterReductionLigne_8"
 	ruleflow-group "validationinput"
 	dialect "mvel"
 	when
@@ -92,30 +184,46 @@ rule "ParameterReductionLigne_4"
 		fact1.setCode( "points" );
 		fact1.setCodeCompatible( "points" );
 		insertLogical( fact1 );
-		com.adeo.lys.model.v2.ReductionLineType fact2 = new com.adeo.lys.model.v2.ReductionLineType();
+		com.adeo.lys.model.v2.ReductionCompatible fact2 = new com.adeo.lys.model.v2.ReductionCompatible();
 		fact2.setCode( "points" );
-		fact2.setLineType( "ORDER_TAKE_AWAY" );
-		insertLogical( fact2 );	end
+		fact2.setCodeCompatible( "rank" );
+		insertLogical( fact2 );
+		com.adeo.lys.model.v2.ReductionCompatible fact3 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact3.setCode( "points" );
+		fact3.setCodeCompatible( "punctual" );
+		insertLogical( fact3 );
+		com.adeo.lys.model.v2.ReductionCompatible fact4 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact4.setCode( "points" );
+		fact4.setCodeCompatible( "boosted_cashback" );
+		insertLogical( fact4 );
+		com.adeo.lys.model.v2.ReductionLineType fact5 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact5.setCode( "points" );
+		fact5.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact5 );	end
 
-rule "ParameterReductionLigne_5"
+rule "ParameterReductionLigne_9"
 	ruleflow-group "validationinput"
 	dialect "mvel"
 	when
 	then
 		com.adeo.lys.model.v2.ReductionParameter ii = new com.adeo.lys.model.v2.ReductionParameter();
-		ii.setCode( "empty" );
-		ii.setPriority( 666 );
+		ii.setCode( "rank" );
+		ii.setPriority( 400 );
 		ii.setAsMany( false );
 		insert( ii );
 		com.adeo.lys.model.v2.ReductionCompatible fact1 = new com.adeo.lys.model.v2.ReductionCompatible();
-		fact1.setCode( "empty" );
-		fact1.setCodeCompatible( "empty" );
+		fact1.setCode( "rank" );
+		fact1.setCodeCompatible( "rank" );
 		insertLogical( fact1 );
 		com.adeo.lys.model.v2.ReductionCompatible fact2 = new com.adeo.lys.model.v2.ReductionCompatible();
-		fact2.setCode( "empty" );
-		fact2.setCodeCompatible( "points_partner" );
+		fact2.setCode( "rank" );
+		fact2.setCodeCompatible( "points" );
 		insertLogical( fact2 );
-		com.adeo.lys.model.v2.ReductionLineType fact3 = new com.adeo.lys.model.v2.ReductionLineType();
-		fact3.setCode( "empty" );
-		fact3.setLineType( "ORDER_TAKE_AWAY" );
-		insertLogical( fact3 );	end
+		com.adeo.lys.model.v2.ReductionCompatible fact3 = new com.adeo.lys.model.v2.ReductionCompatible();
+		fact3.setCode( "rank" );
+		fact3.setCodeCompatible( "punctual" );
+		insertLogical( fact3 );
+		com.adeo.lys.model.v2.ReductionLineType fact4 = new com.adeo.lys.model.v2.ReductionLineType();
+		fact4.setCode( "rank" );
+		fact4.setLineType( "ORDER_TAKE_AWAY" );
+		insertLogical( fact4 );	end

@@ -10,7 +10,7 @@ import java.math.RoundingMode;
 rule "BURN_REWARD_COMMON_PROMOCODES"
 	dialect "mvel"
 	ruleflow-group "reductionligne"
-    salience "9700"
+    salience "9800"
 	when
 		(com.adeo.lys.model.v2.ActiveTypology(name=="common_promocodes") or not com.adeo.lys.model.v2.ActiveTypology())
 		bst : com.adeo.lys.model.v2.BasketSubTotal( key == "sousTotalBase" , tot : subtotalAmount != null )

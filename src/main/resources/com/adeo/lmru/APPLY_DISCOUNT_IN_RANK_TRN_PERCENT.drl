@@ -8,14 +8,14 @@ import java.time.LocalDateTime;
 import java.math.RoundingMode;
 
 
-rule "APPLY_DISCOUNT_IN_COMMON_PROMOCODES_TRN_FIXED"
+rule "APPLY_DISCOUNT_IN_RANK_TRN_PERCENT"
 	dialect "mvel"
 	ruleflow-group "reductionligne"
-    salience "9800"
-	when
-		(com.adeo.lys.model.v2.ActiveTypology(name=="common_promocodes") or not com.adeo.lys.model.v2.ActiveTypology())
+    salience "6000"
+when
+		(com.adeo.lys.model.v2.ActiveTypology(name=="rank") or not com.adeo.lys.model.v2.ActiveTypology())
 		bst : com.adeo.lys.model.v2.BasketSubTotal( key == "sousTotalBase" , tot : subtotalAmount != null )
-		di : com.adeo.lys.model.v2.DiscountIn( ccode : code != null , unit == "FIXED" , vv : value != null, typology=="common_promocodes", rewardIdToBurn == null, fromOrderContext == false)
+		di : com.adeo.lys.model.v2.DiscountIn( ccode : code != null , unit == "PERCENT" , vv : value != null, typology=="rank", rewardIdToBurn == null, fromOrderContext == false)
 		ba : com.adeo.lys.model.v2.Basket( discounts contains di , lines : lines)
         not (com.adeo.lys.model.v2.BasketReduction(key == di.code) )
 	then
@@ -25,8 +25,8 @@ rule "APPLY_DISCOUNT_IN_COMMON_PROMOCODES_TRN_FIXED"
         fact0.setKey(di.getCode());
         fact0.setDescription(di.getCode());
         fact0.setTypology(di.getTypology());
-        fact0.setUnit("FIXED");
-        fact0.setCalcModeCode("FIXED");
+        fact0.setUnit("PERCENT");
+        fact0.setCalcModeCode("PERCENT");
         fact0.setRewardType("DISCOUNT");
         fact0.setAdvantageCode(di.getCode());
         fact0.setTemplateCode(di.getTypology());

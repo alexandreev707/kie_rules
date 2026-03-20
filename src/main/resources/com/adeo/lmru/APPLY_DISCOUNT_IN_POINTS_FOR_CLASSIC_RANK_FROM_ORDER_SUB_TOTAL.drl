@@ -7,19 +7,17 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.math.RoundingMode;
 
-rule "BURN_REWARD_UNIQUE_PROMOCODES"
+
+rule "APPLY_DISCOUNT_IN_POINTS_FOR_CLASSIC_RANK_FROM_ORDER_SUB_TOTAL"
 	dialect "mvel"
 	ruleflow-group "reductionligne"
-    salience "9700"
+    salience "7821"
 	when
-		(com.adeo.lys.model.v2.ActiveTypology(name=="unique_promocodes") or not com.adeo.lys.model.v2.ActiveTypology())
-		bst : com.adeo.lys.model.v2.BasketSubTotal( key == "sousTotalBase" , tot : subtotalAmount != null )
-		di : com.adeo.lys.model.v2.DiscountIn( ccode : code != null , engineTemplateCode == "unique_promocodes" , vv : value != null,  rewardIdToBurn != null, fromOrderContext == false)
-		ba : com.adeo.lys.model.v2.Basket( discounts contains di , lines : lines)
-	    oo : com.adeo.lys.model.v2.Line(nn : number,qua1 : quantity, ua1 : unitaryAmount)
+		(com.adeo.lys.model.v2.ActiveTypology(name=="points_for_classic_rank") or not com.adeo.lys.model.v2.ActiveTypology())
+		di : com.adeo.lys.model.v2.DiscountIn( ccode : code != null , unit == "PERCENT" , vv : value != null, typology=="points_for_classic_rank", rewardId != null, fromOrderContext == true, subTotal == true)
+        ba : com.adeo.lys.model.v2.Basket( discounts contains di , lines : lines)
         not (com.adeo.lys.model.v2.LineReduction(key==di.getCode(), locked == false))
         not (com.adeo.lys.model.v2.RemovedReduction(key==di.getCode()))
-        com.adeo.lys.model.v2.Loyalty(status=="VALID")
 	then
         com.adeo.lys.model.v2.BasketReduction fact0 = new com.adeo.lys.model.v2.BasketReduction();
         fact0.setExternalCode(di.getExternalCode());
@@ -27,16 +25,18 @@ rule "BURN_REWARD_UNIQUE_PROMOCODES"
         fact0.setKey(di.getCode());
         fact0.setDescription(di.getLabel());
         fact0.setShortLabel(di.getLabel());
-        fact0.setTypology("unique_promocodes");
+        fact0.setTypology("points_for_classic_rank");
         fact0.setUnit(di.getUnit());
         fact0.setCalcModeCode(di.getUnit());
         fact0.setOfferCode("Burn Reward");
         fact0.setRewardType("DISCOUNT");
         fact0.setAdvantageCode("Burn Reward");
-        fact0.setTemplateCode("unique_promocodes");
+        fact0.setTemplateCode("points_for_classic_rank");
         fact0.setExternalRewardToBurn(di.getRewardIdToBurn());
-        fact0.setRewardId(di.getRewardIdToBurn());
+        fact0.setRewardId(di.getRewardId());
         fact0.setBenefType("TRANSACTION");
         fact0.setImpact("ON_TRANSACTION");
+        fact0.setLocked(true);
+        fact0.setOrderNumber(di.getOrderNumber());
         insert( fact0 );
 end

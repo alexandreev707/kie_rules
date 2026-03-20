@@ -8,14 +8,14 @@ import java.time.LocalDateTime;
 import java.math.RoundingMode;
 
 
-rule "APPLY_DISCOUNT_IN_COMMON_PROMOCODES_TRN_FIXED"
+rule "APPLY_DISCOUNT_IN_PROMO_ACTION_DISCOUNT_TRN_FIXED"
 	dialect "mvel"
 	ruleflow-group "reductionligne"
-    salience "9800"
+    salience "7850"
 	when
-		(com.adeo.lys.model.v2.ActiveTypology(name=="common_promocodes") or not com.adeo.lys.model.v2.ActiveTypology())
+		(com.adeo.lys.model.v2.ActiveTypology(name=="promo_action_discount") or not com.adeo.lys.model.v2.ActiveTypology())
 		bst : com.adeo.lys.model.v2.BasketSubTotal( key == "sousTotalBase" , tot : subtotalAmount != null )
-		di : com.adeo.lys.model.v2.DiscountIn( ccode : code != null , unit == "FIXED" , vv : value != null, typology=="common_promocodes", rewardIdToBurn == null, fromOrderContext == false)
+		di : com.adeo.lys.model.v2.DiscountIn( ccode : code != null , unit == "FIXED" , vv : value != null, typology=="promo_action_discount", rewardIdToBurn == null, fromOrderContext == false)
 		ba : com.adeo.lys.model.v2.Basket( discounts contains di , lines : lines)
         not (com.adeo.lys.model.v2.BasketReduction(key == di.code) )
 	then

@@ -1,0 +1,76 @@
+/** this is a rule generated from an user configuration **/
+package com.adeo.lmru;
+
+import java.lang.Number;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+
+rule "10_10007929_HEGEL_MOSCOW_TR"
+    dialect "mvel"
+    ruleflow-group "reductionligne"
+    salience "7501"
+    when
+            (com.adeo.lys.model.v2.ActiveTypology(name=="boosted_cashback") or not com.adeo.lys.model.v2.ActiveTypology())
+            context : com.adeo.lys.model.v2.Context(dateTime >= LocalDateTime.parse("2026-02-28T22:00") , dateTime <= LocalDateTime.parse("2026-03-30T23:59:59"))
+            			 tot : BigDecimal(intValue >= 1) from accumulate (
+			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "boosted_cashback")
+			&& com.adeo.lys.model.v2.SegmentMatch(smlist contains this ,code=="1139",type=="LIST"),
+				init( BigDecimal result = new BigDecimal(0.0); ),
+				action( result = result.add(qua.multiply(ua)); ),
+				reverse( result = result.min(qua.multiply(ua)); ),
+				result( result )
+		)
+
+		 totqua : BigDecimal(intValue >= 0) from accumulate (
+			com.adeo.lys.model.v2.Line( n : number,qua : quantity, ua : unitaryAmount,smlist : segmentMatches, excludedDiscountCategories not contains "boosted_cashback")
+			&& com.adeo.lys.model.v2.SegmentMatch(smlist contains this ,code=="1139",type=="LIST"),
+				init( BigDecimal result = new BigDecimal(0.0); ),
+				action( result = result.add(qua); ),
+				reverse( result = result.min(qua); ),
+				result( result )
+		)
+
+            not (com.adeo.lys.model.v2.Discount(key == "10_10007929_HEGEL_MOSCOW_TR") )
+            concernedLines : java.util.ArrayList( size>0) from accumulate (
+				oo : com.adeo.lys.model.v2.Line(excludedDiscountCategories not contains "boosted_cashback", smlist1 : segmentMatches, nn : number, type : type,  java.util.Arrays.asList("2P","3P") not contains offerType)
+				&& ol : com.adeo.lys.model.v2.TotalLineReduction(number == nn , totalDiscount : amount)
+				&& com.adeo.lys.model.v2.ReductionLineType( lineType == type, code == "boosted_cashback")
+				&& not com.adeo.lys.model.v2.LineReduction( number==nn,key=="10_10007929_HEGEL_MOSCOW_TR")
+				&& not com.adeo.lys.model.v2.RemovedReduction( lineNumber==nn,lineReduction.key=="10_10007929_HEGEL_MOSCOW_TR")
+				&& com.adeo.lys.model.v2.SegmentMatch(smlist1 contains this ,code=="1139",type=="LIST"),
+			collectList(new com.adeo.lys.model.v2.CompleteLine(oo,ol)))
+        then
+            			BigDecimal each = BigDecimal.valueOf(1);
+			for (Object  o : concernedLines){
+			com.adeo.lys.model.v2.CompleteLine completeLine=(com.adeo.lys.model.v2.CompleteLine)o;
+			com.adeo.lys.model.v2.Line line = completeLine.getLine();
+			com.adeo.lys.model.v2.TotalLineReduction totalReduction = completeLine.getTotalLineReduction();
+			BigDecimal totalLineReduction = totalReduction.getAmount();
+			com.adeo.lys.model.v2.LineReduction fact0 = new com.adeo.lys.model.v2.LineReduction();
+			fact0.setNumber(line.getNumber());
+			fact0.setValue(BigDecimal.valueOf(10));
+			BigDecimal result = null; 
+			result = line.getQuantity().multiply(line.getUnitaryAmount()).subtract(totalLineReduction).multiply(BigDecimal.valueOf(10).divide(100)).setScale(0, RoundingMode.DOWN);
+			fact0.setAmount(result);
+			fact0.setValue(result);
+			fact0.setMultiline(true);
+			fact0.setKey("10_10007929_HEGEL_MOSCOW_TR"); 
+			fact0.setDescription("10_10007929_HEGEL_Moscow_TR"); 
+			fact0.setTypology("boosted_cashback"); 
+			fact0.setUnit("POINT"); 
+			fact0.setCalcModeCode("PERCENT"); 
+			fact0.setOfferCode("10007929_HEGEL_TR"); 
+			fact0.setRewardType("UNIT"); 
+			fact0.setAdvantageCode("10_10007929_HEGEL_MOSCOW_TR"); 
+			fact0.setAdvantageId("3623"); 
+			fact0.setTemplateCode("boosted_cashback"); 
+			fact0.setExternalCode("11"); 
+			fact0.setBenefType("PRODUCT_LIST"); 
+			fact0.setImpact("ON_TRANSACTION"); 
+			fact0.setEarnKind("TRN"); 
+			fact0.setShortLabel("10_10007929_HEGEL_Moscow_TR"); 
+			fact0.setLimited(false); 
+		    insert( fact0 );
+		}
+    end
